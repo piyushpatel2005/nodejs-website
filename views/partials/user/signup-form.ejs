@@ -1,32 +1,94 @@
-<form class="form-horizontal" role="form" method="post" action="/users/signup">
-    <div class="form-group">
+<form class="form-horizontal" role="form" ng-controller="SignupFormController" name="signupForm" novalidate ng-submit="signup(formData)">
+    <div>
+        {{err | json}}
+    </div>
+    <div class="form-group" 
+        ng-class="{'has-error': signupForm.firstName.$touched && signupForm.firstName.$invalid, 
+        'has-success': signupForm.firstName.$touched && signupForm.firstName.$valid}">
         <label for="firstName" class="col-sm-2 control-label">First Name</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name">
+            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" 
+            aria-describedby="firstNameHelp" ng-model="formData.firstName" ng-minlength="3" required>
+            <span id="firstNameHelp">
+                <span class="help-block" ng-show="signupForm.firstName.$touched && signupForm.firstName.$error.required">
+                    First Name is required.
+                </span>
+                <span class="help-block" ng-show="signupForm.firstName.$touched && signupForm.firstName.$error.minlength">
+                    First Name must be at least 2 characters long.
+                </span>
+            </span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group" 
+        ng-class="{'has-error': signupForm.lastName.$touched && signupForm.lastName.$invalid, 
+        'has-success': signupForm.lastName.$touched && signupForm.lastName.$valid}">
         <label for="lastName" class="col-sm-2 control-label">Last Name</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name">
+            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" 
+            aria-describedby="lastNameHelp" ng-model="formData.lastName" ng-minlength="3" required>
+            <span id="lastNameHelp">
+                <span class="help-block" ng-show="signupForm.lastName.$touched && signupForm.lastName.$error.required">
+                    Last Name is required.
+                </span>
+                <span class="help-block" ng-show="signupForm.lastName.$touched && signupForm.lastName.$error.minlength">
+                    Last Name must be at least 2 characters long.
+                </span>
+            </span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group"
+        ng-class="{'has-error': signupForm.email.$touched && signupForm.email.$invalid,
+        'has-success': signupForm.email.$touched && signupForm.email.$valid}">
         <label for="email" class="col-sm-2 control-label">Email</label>
         <div class="col-sm-10">
-        <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+            <input type="email" class="form-control" id="email" name="email" placeholder="abc@example.com" ng-model="formData.email" aria-describedby="emailHelp" email required>
+            <span id="emailHelp" class="help-block" ng-show="signupForm.email.$touched && signupForm.email.$invalid">
+                <span 
+                    ng-show="signupForm.email.$touched && signupForm.email.$error.required">
+                    Email address is required.
+                </span>
+                <span  
+                    ng-show-"signupForm.email.$touched && signupForm.email.$invalid">
+                    It doesn't look like an email!
+                </span>
+            </span>
         </div>
     </div>
-    <div class="form-group">
+    <div class="form-group"
+        ng-class="{'has-error': signupForm.password.$touched && signupForm.password.$invalid,
+        'has-success': signupForm.password.$touched && signupForm.password.$valid}">
         <label for="password" class="col-sm-2 control-label">Password</label>
         <div class="col-sm-10">
-        <input type="password" class="form-control " id="password" name="password" placeholder="Password">
+            <input type="password" class="form-control " id="password" name="password" placeholder="Password" ng-model="formData.password" aria-describedby="passwordHelp"
+            ng-minlength="8" ng-pattern="/[a-zA-Z0-9@#$%&*!]{8,20}/" required>
+            <span id="passwordHelp" class="help-block" ng-show="signupForm.password.$touched && signupForm.password.$invalid">
+                <span ng-show="signupForm.password.$touched && signupForm.password.$error.required">
+                    Password is required. 
+                </span>
+                <span ng-show-"signupForm.password.$touched && !signupForm.password.$error.pattern">
+                    Password must be 8 characters long and less than 20 characters.
+                </span>
+            </span>
         </div>
     </div>
-    <div class="form-group ">
-        <label for="confirmation " class="col-sm-2 control-label">Password</label>
+    <div class="form-group"
+        ng-class="{'has-error': signupForm.confirmation.$touched && signupForm.confirmation.$invalid,
+        'has-success': signupForm.confirmation.$touched && signupForm.confirmation.$valid}">
+        <label for="confirmation " class="col-sm-2 control-label">Confirm Password</label>
         <div class="col-sm-10">
-            <input type="password" class="form-control " id="confirmation" name="confirmation" placeholder="Password">
+            <input type="password" class="form-control " id="confirmation" name="confirmation" placeholder="Password" ng-model="formData.confirmation" required ng-pattern="/[a-zA-Z0-9@#$%&*!]{8,20}/">
+            <span id="confirmationHelp" class="help-block" 
+                ng-show="signupForm.confirmation.$touched && signupForm.confirmation.$invalid">
+                <span ng-show="signupForm.confirmation.$touched && signupForm.confirmation.$error.required">
+                    Please, repeat the password again!
+                </span>
+                <span ng-show-"signupForm.confirmation.$touched && signupForm.confirmation.$invalid">
+                    Password must be 8 characters long and less than 20 characters.
+                </span>
+                <span ng-show="formData.password !== formData.confirmation">
+                    Passwords didn't match.
+                </span>
+            </span>
         </div>
     </div>
     <div class="form-group ">

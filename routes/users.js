@@ -10,4 +10,6 @@ const UserController = require('../controllers/UserController');
 /** UserController routes */
 router.post('/signup', validate(validation.signup), UserController.createUser);
 
+router.get('/profile', UserController.viewProfile);
+
 module.exports = router;

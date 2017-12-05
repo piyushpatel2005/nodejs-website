@@ -6,7 +6,7 @@ const HomeController = require('../controllers/HomeController');
 /* GET home page actions. */
 router.get('/', HomeController.index);
 
-router. get('/signup', HomeController.signup);
+router.get('/users/signup', HomeController.signup);
 
 router.get('/signin', HomeController.signin);
 

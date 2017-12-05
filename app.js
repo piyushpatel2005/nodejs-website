@@ -1,5 +1,6 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const boom = require('express-boom');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
@@ -11,7 +12,11 @@ const users = require('./routes/users');
 
 const app = express();
 // Get the connection
-const mongoose = require('./config/mongoose.js');
+const mongoose = require('./config/mongoose')();
+mongoose.Promise = require('bluebird');
+
+// Use boom library to create errors
+app.use(boom());
 
 app.use(express.static(path.join(__dirname, 'public')));
 // view engine setup

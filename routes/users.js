@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const validate = require('express-validation');
+const validation = {
+  signup: require('../validations/signup.js')
+};
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const UserController = require('../controllers/UserController');
+
+/** UserController routes */
+router.post('/signup', validate(validation.signup), UserController.createUser);
 
 module.exports = router;

@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="/stylesheets/toastr.min.css">
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
+    <script>
+        window.user = <%- JSON.stringify(user || null) %>
+        console.log(user);
+    </script>
 </head>
 <body ng-app="tutorialsApp" ng-cloak>
     <% include partials/shared/navigation %>
@@ -18,6 +22,7 @@
     <script src="/javascripts/toastr.min.js"></script>
     <script src="/javascripts/angular.min.js"></script>
     <script src="/javascripts/app.js"></script>
+    <script src="/javascripts/controllers/navigation.controller.js"></script>
     <script src="/javascripts/controllers/signup-form.controller.js"></script>
     <script src="/javascripts/controllers/login-form.controller.js"></script>
 </body>

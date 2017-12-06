@@ -29,7 +29,9 @@
             })
             .catch((err) => {
                 $scope.errors = err.data;
-                toastr.error($scope.errors.message, 'Error!');
+                toastr.error($scope.errors.message, 'Error!', {
+                    closeButton: true
+                });
             });
 
         }

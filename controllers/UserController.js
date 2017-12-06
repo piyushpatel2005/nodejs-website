@@ -85,25 +85,25 @@ exports.createUser = (req, res, next) => {
                     })
                 }
 
-                    let newUser = new User({
-                        firstName: firstName,
-                        lastName: lastName,
-                        email: email,
-                        password: result,
-                        gravatarUrl: gravatarUrl
-                    });
-                    newUser.save((err, createdUser) => {
-                        if(err) {
-                            return res.status(500).json({
-                                message: "Error saving the record."
-                            });
-                        }
-                        req.session.userId = createdUser._id;
-                        return res.status(201).json({
-                            errors: errors,
-                            message: "User registration successful!",
+                let newUser = new User({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: result,
+                    gravatarUrl: gravatarUrl
+                });
+                newUser.save((err, createdUser) => {
+                    if(err) {
+                        return res.status(500).json({
+                            message: "Error saving the record."
                         });
+                    }
+                    req.session.userId = createdUser._id;
+                    return res.status(201).json({
+                        errors: errors,
+                        message: "User registration successful!",
                     });
+                });
             }
         });        
     });
@@ -157,7 +157,6 @@ exports.viewProfile = (req, res, next) => {
         return res.redirect('/signin');
     }
 
-    console.log("in profile page");
     User.findById(req.session.userId, (err, loggedinUser) => {
         if(err) {
             return res.status(500).json({
@@ -172,14 +171,13 @@ exports.viewProfile = (req, res, next) => {
             email: loggedinUser.email
         };
 
-        console.log(user);
         return res.render('partials/user/profile', {
             user: {
                 id: loggedinUser._id,
-                email: loggedinUser.email
+                email: loggedinUser.email,
+                gravatarUrl: loggedinUser.gravatarUrl
             },
             title: "My Profile"
-            
         });
     });
 };

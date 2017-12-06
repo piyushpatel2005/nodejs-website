@@ -13,7 +13,7 @@ const users = require('./routes/users');
 const app = express();
 // Get the connection
 const mongoose = require('./config/mongoose')();
-mongoose.Promise = require('bluebird');
+// mongoose.Promise = require('bluebird');
 
 // Use boom library to create errors
 app.use(boom());
@@ -23,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

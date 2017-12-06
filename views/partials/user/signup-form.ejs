@@ -76,7 +76,7 @@
         'has-success': signupForm.confirmation.$touched && signupForm.confirmation.$valid}">
         <label for="confirmation " class="col-sm-2 control-label">Confirm Password</label>
         <div class="col-sm-10">
-            <input type="password" class="form-control " id="confirmation" name="confirmation" placeholder="Password" ng-model="formData.confirmation" required ng-pattern="/[a-zA-Z0-9@#$%&*!]{8,20}/">
+            <input type="password" class="form-control " id="confirmation" name="confirmation" placeholder="Repeat Password" ng-model="formData.confirmation" required ng-pattern="/[a-zA-Z0-9@#$%&*!]{8,20}/">
             <span id="confirmationHelp" class="help-block" 
                 ng-show="signupForm.confirmation.$touched && signupForm.confirmation.$invalid">
                 <span ng-show="signupForm.confirmation.$touched && signupForm.confirmation.$error.required">

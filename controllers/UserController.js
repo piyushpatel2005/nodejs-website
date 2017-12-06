@@ -1,59 +1,86 @@
 const mongoose = require('mongoose');
 const User = require('../models/user');
-const validation = require('express-validation');
+const _ = require('lodash');
+
+const expressValidator = require('express-validator');
 
 
-exports.createUser = (err, req, res, next) => {
+exports.createUser = (req, res, next) => {
+    let firstName = _.trim(req.body.firstName);
+    let lastName = _.trim(req.body.lastName);
+    let email = _.trim(req.body.email);
     let password = req.body.password;
     let confirmation = req.body.confirmation;
-    console.log("in createuser");
 
-    // Handle most of the errors using Joi
-    // if (err instanceof validation.ValidationError) {
-    //     console.log("Error occurred");
-    //     return res.status(err.status).json(err);
-    //     // return res.json(200, 'success');
-    // }
-    // if(err) {
-    //     return res.status(404).json(err);
-    // }
-    console.log(req.body);
-    if(err) {
-        console.log('in error block');
+    console.log(lastName, firstName);
+    
+    if(_.isUndefined(firstName) || _.isEmpty(firstName)){
         return res.status(400).json({
-            "message": 'Worn'
+            "message": "First Name is required."
         });
     }
 
-    // if(password !== confirmation) {
-    //     let err = error(500, 'Passwords did not match.');
-    //     // res.redirect('signup', {
-    //     //     message: err.message
-    //     // });
-    //     console.log("passwords didn't match");
-    //     return res.status(500).json({
-    //         message: "Passwords did not match."
-    //     });
-    // }
-    console.log('here');
-    let user = new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        email: req.body.email,
-        password: req.body.password
-
-    });
-
-    user.save()
-    .then((err,user) => {
-        req.session.userId = user._id;
-        return res.json({
-            "success": true
+    if(_.isUndefined(lastName) || _.isEmpty(lastName)){
+        return res.status(400).json({
+            "message": "Last Name is required."
         });
-    })
-    .catch((err) => {
-        console.log("Promise error");
-        return res.send(400, err);
+    }
+
+    if(_.isUndefined(email) || (_.trim(email)).length < 1){
+        return res.status(400).json({
+            "message": "Email is required."
+        });
+    }
+    
+    if(!email.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
+        return res.status(400).json({
+            "message": "It doesn't look like an email."
+        });
+    }
+
+    if(_.isUndefined(password) || _.isEmpty(_.trim(password))){
+        return res.status(400).json({
+            "message": "Password is required."
+        });
+    }
+
+    console.log(password, confirmation);
+    if(password !== confirmation) {
+        return res.status(500).json({
+            message: "Passwords did not match."
+        });
+    }
+
+    User.findOne({email: email}, (err, user) => {
+        if(err) {
+            return res.status(500).json({
+                message: "Error in finding the record."
+            });
+        }
+        if(user) {
+            return res.status(403).json({
+                message: "User with this email address already exists."
+            });
+        }
+
+        let newUser = new User({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password
+        });
+
+        newUser.save((err, createdUser) => {
+            if(err) {
+                return res.status(500).json({
+                    message: "Error saving the record."
+                });
+            }
+            // req.session.userId = user._id;
+            return res.status(200).json({
+                message: "User registration successful!"
+            });
+        });
     });
 };
 

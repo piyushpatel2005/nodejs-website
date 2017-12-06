@@ -1,10 +1,10 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
-const boom = require('express-boom');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 
 const index = require('./routes/index');
@@ -13,10 +13,7 @@ const users = require('./routes/users');
 const app = express();
 // Get the connection
 const mongoose = require('./config/mongoose')();
-// mongoose.Promise = require('bluebird');
-
-// Use boom library to create errors
-app.use(boom());
+mongoose.Promise = require('bluebird');
 
 app.use(express.static(path.join(__dirname, 'public')));
 // view engine setup

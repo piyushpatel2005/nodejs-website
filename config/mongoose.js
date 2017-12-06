@@ -4,9 +4,9 @@ const bluebird = require('bluebird');
 
 const options = {
     useMongoClient: true,
-    // reconnectTries: 10, 
-    // promiseLibrary: bluebird,
-    // reconnectInterval: 500
+    reconnectTries: 10, 
+    promiseLibrary: bluebird,
+    reconnectInterval: 500
 }
 module.exports = () => {
     const db = mongoose.connect(config.mongodb, options);
@@ -28,5 +28,5 @@ module.exports = () => {
             process.exit(0);
         });
     });
-
+    return db;
 }

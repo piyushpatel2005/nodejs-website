@@ -9,24 +9,20 @@ exports.createUser = (req, res, next) => {
     let errors = {};
     
     if(_.isUndefined(req.body.firstName) || _.isEmpty(req.body.firstName)){
-        errors.firstName = {};
+        errors.firstName = "First Name is required. ";
         errors.hasError = true;
-        errors.firstName.required = "First Name is required. ";
     }
 
     if(_.isUndefined(req.body.lastName) || _.isEmpty(req.body.lastName)){
-        errors.lastName = {};
-        errors.lastName.required = "Last Name is required. ";
+        errors.lastName = "Last Name is required. ";
     }
 
     if(_.isUndefined(req.body.email) || (_.trim(req.body.email)).length < 1){
-        errors.email = {}
-        errors.email.required = "Email is required. ";
+        errors.email = "Email is required. ";
     }
 
     if(_.isUndefined(req.body.password) || _.isEmpty(_.trim(req.body.password))){
-        errors.password = {};
-        errors.password.required = "Password is required. ";
+        errors.password = "Password is required. ";
     }
 
     let firstName = _.escape(_.trim(req.body.firstName));
@@ -36,23 +32,23 @@ exports.createUser = (req, res, next) => {
     let confirmation = _.escape(_.trim(req.body.confirmation));
     
     if(!email.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) {
-        errors.email = errors.email || {};
-        errors.email.invalid = "It doesn't look like an email.";
+        errors.email = errors.email || "";
+        errors.email +="It doesn't look like an email.";
     }
 
-    if(!password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/)) {
-        errors.password = errors.password || {};
-        errors.password.invalid = "Password must contain at least one uppercase, one lowercase and a digit.";
+    if(!password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/)) {
+        errors.password = errors.password || "";
+        errors.password.invalid += "Password must contain at least one uppercase, one lowercase and a digit.";
     }
 
     if(password !== confirmation) {
-        errors.confirmation = {};
-        errors.confirmation.match = "Passwords didn't match.";
+        errors.confirmation = "";
+        errors.confirmation.match += "Passwords didn't match.";
     }
 
     if(!_.isEmpty(errors)) {
         return res.status(400).json({
-            message: "Bad input request",
+            message: "Please, fill up the form properly.",
             errors: errors
         });
     }
@@ -102,5 +98,5 @@ exports.createUser = (req, res, next) => {
 exports.viewProfile = (req, res, next) => {
     res.render('profile', {
         title: 'Profile'
-    })
-}
+    });
+};

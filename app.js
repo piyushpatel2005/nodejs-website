@@ -29,6 +29,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(session({
+  secret: "hi",
+  key: "",
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24
+  },
+  resave: false,
+  saveUninitialized: true
+}));
+
 
 app.use('/', index);
 app.use('/users', users);

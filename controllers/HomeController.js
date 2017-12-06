@@ -17,7 +17,7 @@ exports.signin = (req, res) => {
 };
 
 exports.getTutorials = (req, res) => {
-    res.render('tutorials', {
+    res.render('partials/tutorials/tutorials', {
         title: 'List of Tutorials'
     });
 };

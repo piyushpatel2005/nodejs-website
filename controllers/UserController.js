@@ -2,6 +2,7 @@
 const User = require('../models/user');
 const _ = require('lodash');
 const Passwords = require('machinepack-passwords');
+const Gravatar = require('machinepack-gravatar');
 
 
 exports.createUser = (req, res, next) => {
@@ -72,31 +73,113 @@ exports.createUser = (req, res, next) => {
                 return res.status(500).json({err: err});
             },
             success: (result) => {
-                let newUser = new User({
-                    firstName: firstName,
-                    lastName: lastName,
-                    email: email,
-                    password: result
-                });
-                newUser.save((err, createdUser) => {
-                    if(err) {
-                        return res.status(500).json({
-                            message: "Error saving the record."
-                        });
-                    }
-                    req.session.userId = createdUser._id;
-                    return res.status(201).json({
-                        errors: errors,
-                        message: "User registration successful!"
+                let gravatarUrl= "";
+                try {
+                    gravatarUrl = Gravatar.getImageUrl({
+                        emailAddress: email
+                    }).execSync();
+                } catch(err) {
+                    console.log(err);
+                    return res.status(500).json({
+                        message: "Failed to get your gravatar"
+                    })
+                }
+
+                    let newUser = new User({
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        password: result,
+                        gravatarUrl: gravatarUrl
                     });
-                });
+                    newUser.save((err, createdUser) => {
+                        if(err) {
+                            return res.status(500).json({
+                                message: "Error saving the record."
+                            });
+                        }
+                        req.session.userId = createdUser._id;
+                        return res.status(201).json({
+                            errors: errors,
+                            message: "User registration successful!",
+                        });
+                    });
             }
         });        
     });
 };
 
+exports.login = (req, res, next) => {
+    let email = _.escape(req.body.email);
+    let password = _.escape(req.body.password);
+
+    User.findOne({
+        email: email
+    }, (err, foundUser) => {
+        if(err) {
+            return res.status(500).json({
+                message: "Something went wrong!"
+            });
+        }
+
+        if(!foundUser) {
+            return res.status(404).json({
+                message: 'User with this email address does not exist. Please, sign up!'
+            });
+        }
+
+        Passwords.checkPassword({
+            passwordAttempt: password,
+            encryptedPassword: foundUser.password
+        }).exec({
+            error: (err) => {
+                res.status(500).json({
+                    message: "Something went wrong!"
+                });
+            },
+            incorrect: () => {
+                res.status(403).json({
+                    message: "Password didn't match."
+                });
+            },
+            success: () => {
+                req.session.userId = foundUser._id;
+                return res.json({
+                    message: "Login Successful!"
+                });
+            }
+        });
+    });
+};
+
 exports.viewProfile = (req, res, next) => {
-    res.render('profile', {
-        title: 'Profile'
+    if(!req.session.userId) {
+        return res.redirect('/signin');
+    }
+
+    console.log("in profile page");
+    User.findById(req.session.userId, (err, loggedinUser) => {
+        if(err) {
+            return res.status(500).json({
+                message: "Something went wrong!"
+            });
+        }
+        if(!loggedinUser) {
+            return res.render('/signin');
+        }
+        let user = {
+            id: loggedinUser._id,
+            email: loggedinUser.email
+        };
+
+        console.log(user);
+        return res.render('partials/user/profile', {
+            user: {
+                id: loggedinUser._id,
+                email: loggedinUser.email
+            },
+            title: "My Profile"
+            
+        });
     });
 };

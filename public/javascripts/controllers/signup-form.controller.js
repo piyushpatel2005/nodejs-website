@@ -6,17 +6,17 @@
 
     function SignupFormController ($scope, $http) {
         $scope.formData = {
-            firstName: "Piyush  ",
+            firstName: "Admin",
             lastName: "Patel",
             email: "abc@example.com",
-            password: "Nectar1985",
-            confirmation: "Nectar1985"
+            password: "Abc12345",
+            confirmation: "Abc12345"
         };
 
         $scope.errors = {};
 
         $scope.signup = (data) => {
-            $http.post('http://localhost:3000/users/signup/', {
+            $http.post('/users/signup/', {
                 firstName: $scope.formData.firstName,
                 lastName: $scope.formData.lastName,
                 email: $scope.formData.email,
@@ -29,7 +29,6 @@
             })
             .catch((err) => {
                 $scope.errors = err.data;
-                console.log($scope.errors);
                 toastr.error($scope.errors.message, 'Error!');
             });
 

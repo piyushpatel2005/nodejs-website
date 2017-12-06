@@ -4,20 +4,20 @@
 
     LoginFormController.$inject = ['$scope', '$http'];
 
-    LoginFormController = function ($scope, $http) {
+    function LoginFormController($scope, $http) {
         $scope.formData = {
-            email: "",
-            password: ""
+            email: "abc@example.com",
+            password: "Abc12345"
         };
 
         $scope.signin = function (data) {
-            $http.post('/users/signin', data)
+            $http.put('/users/signin', data)
             .then((success) => {
-                window.location = '/users/profile';
+                window.location = '/tutorials';
             })
             .catch((err) => {
-                $scope.failed = true;
+                
             })
         }
-    }
+    };
 })();

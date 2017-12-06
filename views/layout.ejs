@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
 </head>
-<body ng-app="tutorialsApp">
+<body ng-app="tutorialsApp" ng-cloak>
     <% include partials/shared/navigation %>
     <%- body %>
     <script src="/javascripts/jquery.min.js"></script>
@@ -19,5 +19,6 @@
     <script src="/javascripts/angular.min.js"></script>
     <script src="/javascripts/app.js"></script>
     <script src="/javascripts/controllers/signup-form.controller.js"></script>
+    <script src="/javascripts/controllers/login-form.controller.js"></script>
 </body>
 </html>

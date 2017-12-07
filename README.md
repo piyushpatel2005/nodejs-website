@@ -2,12 +2,12 @@
 
 This website uses following technologies:
 
-[NodeJS](https://nodejs.org/en/)
-[ExpressJs](http://expressjs.com/)
-[AngularJS](https://angularjs.org)
-[Mongoose](http://mongoosejs.com/)
-[EJS](http://ejs.co/)
-[Bootstrap](http://getbootstrap.com)
+- [NodeJS](https://nodejs.org/en/)
+- [ExpressJs](http://expressjs.com/)
+- [AngularJS](https://angularjs.org)
+- [Mongoose](http://mongoosejs.com/)
+- [EJS](http://ejs.co/)
+- [Bootstrap](http://getbootstrap.com)
 
 ## Instructions
 

@@ -1,1 +1,13 @@
-My profile
+<section class="container" ng-controller="ProfileController">
+    <div class="row">
+        <div class="col-xs-12 col-sm-3">
+            <img ng-src="{{user.gravatarUrl}}" class="img-responsive img-thumbnail" alt="{{user.fullName}}">
+        </div>
+        <div class="col-xs-12 col-sm-9">
+            <h2>{{user.fullName}}'s Personal Information</h2>
+            <p>Name: {{user.fullName}}</p>
+            <p>Email: {{user.email}}</p>
+            <p>Gravatar: {{user.gravatarUrl}}</p>
+        </div>
+    </div>
+</section>

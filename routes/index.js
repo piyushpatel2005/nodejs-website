@@ -21,5 +21,7 @@ router.get('/users/profile', UserController.viewProfile);
 
 router.put('/users/signin', UserController.login);
 
+router.get('/users/logout', UserController.logout);
+
 
 module.exports = router;

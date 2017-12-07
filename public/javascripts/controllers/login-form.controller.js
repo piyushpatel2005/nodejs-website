@@ -13,7 +13,7 @@
         $scope.signin = function (data) {
             $http.put('/users/signin', data)
             .then((success) => {
-                window.location = '/tutorials';
+                window.location = '/users/profile';
             })
             .catch((err) => {
                 

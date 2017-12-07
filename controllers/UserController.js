@@ -164,7 +164,7 @@ exports.viewProfile = (req, res, next) => {
             });
         }
         if(!loggedinUser) {
-            return res.render('/signin');
+            return res.redirect('/signin');
         }
         let user = {
             id: loggedinUser._id,
@@ -174,10 +174,32 @@ exports.viewProfile = (req, res, next) => {
         return res.render('partials/user/profile', {
             user: {
                 id: loggedinUser._id,
+                fullName: loggedinUser.fullName,
                 email: loggedinUser.email,
                 gravatarUrl: loggedinUser.gravatarUrl
             },
             title: "My Profile"
         });
     });
+};
+
+exports.logout = (req, res, next) => {
+    if(!req.session.userId) {
+        return res.redirect('/signin');
+    }
+
+    User.findById(req.session.userId, (err, user) => {
+        if(err) {
+            return next(err);
+        }
+
+        if(!user) {
+            res.status(404).json({
+                message: "You shouldn't be here. Please login again!"
+            });
+        }
+
+        req.session.userId = null;
+        return res.redirect('/signin');
+    })
 };

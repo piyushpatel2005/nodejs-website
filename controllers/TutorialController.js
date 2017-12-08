@@ -1,17 +1,15 @@
 const Tutorial = require('../models/tutorial');
 const User = require('../models/user');
 const TutorialServices = require('../services/TutorialServices');
+const DateTimeService = require('../services/DateTimeService');
 
 exports.showAddTutorialPage = function (req, res) {
     if(!req.session.userId) {
-        res.render('partials/tutorials/add-tutorial', {
-            
-        });
+        return res.redirect('/signin');
     }
     User.findById(req.session.userId)
     .then((user) => {
-        console.log(user); // TODO: remove
-        res.render('partials/tutorials/add-tutorial', {
+        return res.render('partials/tutorials/add-tutorial', {
             user: {
                 id: user._id,
                 fullName: user.fullName,
@@ -38,12 +36,12 @@ exports.createTutorial = function (req, res) {
             return res.status(500).json({
                 message: validationResult
             });
-        }
+        }        
         validationResult.owner = req.session.userId;
-        let newTutorial = new Tutorial(valiationResult)
+        let newTutorial = new Tutorial(validationResult)
         newTutorial.save()
         .then((tutorial) => {
-            user.tutorials.push(newTutorial._id)
+            user.tutorials.push(newTutorial._id);
             user.save()
             .then((user) => {
                 return res.status(201).json(newTutorial)
@@ -56,9 +54,53 @@ exports.createTutorial = function (req, res) {
         });
     })
     .catch((err) => {
-        req.session.userId = null;
         res.status(404).json({
             message: "User not logged in!"
         });
     });
-}
+};
+
+exports.showTutorial = function (req, res) {
+    Tutorial.findById(req.params.id)
+    .populate('owner')
+    .then((tutorial) => {
+        
+        if(!tutorial) {
+            return res.status(404).json({
+                message: "This tutorial does not exist."
+            });
+        }
+        if(!req.session.userId) {
+            return res.render('partials/tutorials/tutorial-details', {
+                user: null,
+                title: tutorial.title,
+                tutorial: tutorial
+            });
+        }
+        User.findById(req.session.userId)
+        .then((user) => {
+            if(!user) {
+                return res.render('partials/tutorials/tutorial-details', {
+                    user: null,
+                    title: tutorial.title,
+                    tutorial: tutorial
+                });
+            }
+            return res.render('partials/tutorials/tutorial-details', {
+                user: {
+                    id: user._id,
+                    gravatarUrl: user.gravatarUrl,
+                    fullName: user.fullName,
+                },
+                title: tutorial.title,
+                tutorial: tutorial
+            });
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).json({
+            message: "Error processing tutorial data."
+        });
+    });
+};

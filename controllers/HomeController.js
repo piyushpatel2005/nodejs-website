@@ -53,6 +53,10 @@ exports.getTutorials = (req, res) => {
     if(req.session.userId) {
         User.findById(req.session.userId)
         .then((user) => {
+            if(!user) {
+                req.session.userId = null;
+                res.redict('/signin');
+            }
             return res.render('partials/tutorials/view-tutorials', {
                 user: {
                     id: user._id,
@@ -65,8 +69,6 @@ exports.getTutorials = (req, res) => {
         })
         .catch((err) => {
             return res.redirect('/signin');
-            
         });
     }
-    
 };

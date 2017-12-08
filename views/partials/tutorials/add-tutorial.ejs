@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row row-content">
-        <div class="col-md-10 col-md-push-1">
+        <div class="col-md-10 col-md-push-1" ng-controller="AddTutorialController">
             <h2 class="text-center">Create a Tutorial</h2>
             <form class="form-horizontal">
                 <div class="form-group">
@@ -8,18 +8,18 @@
                         Title:
                     </label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" placeholder="Title">
+                        <input type="text" class="form-control" placeholder="Title" ng-model="formData.title">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="description" class="col-sm-2 control-label">Description:</label>
                     <div class="col-sm-10">
-                        <textarea name="description" id="description" cols="30" rows="10" class="form-control" placeholder="What is it about?"></textarea>
+                        <textarea name="description" id="description" cols="30" rows="10" class="form-control" placeholder="What is it about?" ng-model="formData.description"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button class="btn btn-primary" type="submit">Create Tutorial</button>
+                        <button class="btn btn-primary" type="submit" ng-click="createTutorial(formData)">Create Tutorial</button>
                     </div>
                 </div>
             </form>

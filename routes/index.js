@@ -30,8 +30,10 @@ router.get('/users/logout', UserController.logout);
 
 /** TutorialController routes */
 
-router.get('/tutorials/add', TutorialController.showAddTutorialPage);
+router.get('/tutorials/add', isLoggedIn, TutorialController.showAddTutorialPage);
 
 router.post('/tutorials/add', isLoggedIn, TutorialController.createTutorial);
+
+router.get('/tutorials/:id', TutorialController.showTutorial);
 
 module.exports = router;

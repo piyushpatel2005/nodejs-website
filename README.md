@@ -9,6 +9,16 @@ This website uses following technologies:
 - [EJS](http://ejs.co/)
 - [Bootstrap](http://getbootstrap.com)
 
+## Debugging:
+
+Two options:
+1. Command line tools
+Node debugger: Set the break point and 
+
+Type `debugger` command where you want to stop. Then run `node debug app.js`. We can also use node inspector.
+
+Type: `node --debug-brk --inspect app.js`
+
 ## Instructions
 
 Run `git clone https://github.com/piyushpatel2005/nodejs-website.git`

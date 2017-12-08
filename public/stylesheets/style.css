@@ -1,5 +1,77 @@
 body {
   font-size: 16px;
+  height: 100%;
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
+
+.search-bar {
+  height: 200px;
+  background: -webkit-linear-gradient(left top, #CC4B4B, rgba(237, 110, 42, 0.6)); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(bottom right, #CC4B4B, rgba(237, 110, 42, 0.6)); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(bottom right, #CC4B4B, rgba(237, 110, 42, 0.6)); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to bottom right, #CC4B4B, rgba(237, 110, 42, 0.6)); /* Standard syntax (must be last) */
+}
+
+/* Search bar in the home page */
+.search {
+  width: 100%;
+  position: relative
+}
+
+.searchTerm {
+  float: left;
+  width: 100%;
+  border: 1px solid #00B4CC;
+  height: 36px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  outline: none;
+  color: #9DBFAF;
+  padding-left: 5px;
+}
+
+.searchTerm:focus{
+  color: #00B4CC;
+}
+
+.searchButton {
+  position: absolute;  
+  right: -40px;
+  width: 40px;
+  height: 36px;
+  border: 1px solid #00B4CC;
+  background: #00B4CC;
+  text-align: center;
+  color: #fff;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.wrap{
+  width: 30%;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/* Search bar in the home page */
+
+.panel {
+  margin-top: 20px;
+}
+
+.panel-footer > span {
+  padding: 5px;
+}
+
+.row-content {
+  margin: 50px;
+  border-bottom: 2px solid rgba(100, 100, 100, 0.6);
 }
 
 .profile-image {

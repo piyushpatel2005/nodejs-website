@@ -9,10 +9,14 @@ const bodyParser = require('body-parser');
 
 const index = require('./routes/index');
 
+
+
 const app = express();
 // Get the connection
 const mongoose = require('./config/mongoose')();
 mongoose.Promise = require('bluebird');
+
+// const seeddata = require('./seeddata').seeddata();
 
 app.use(express.static(path.join(__dirname, 'public')));
 // view engine setup

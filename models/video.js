@@ -34,6 +34,5 @@ videoSchema.virtual('hours').get(function () {
     return Math.floor(this.duration / 60 / 60);
 });
 
-videoSchema.virtual('duration')
 
 module.exports = mongoose.model('Video', videoSchema);

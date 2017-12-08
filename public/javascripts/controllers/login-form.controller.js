@@ -16,7 +16,9 @@
                 window.location = '/users/profile';
             })
             .catch((err) => {
-                
+                $scope.errors = err.data;
+                console.log(err);
+                toastr.error($scope.errors.message, 'Error!');
             })
         }
     };

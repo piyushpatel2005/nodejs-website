@@ -69,6 +69,16 @@ body {
   padding: 5px;
 }
 
+.list-group-item {
+  word-wrap: wrap;
+  overflow: hidden;
+}
+
+.list-group-item > span {
+  padding: 5px;
+  margin-left: auto;
+}
+
 .row-content {
   margin: 50px;
   border-bottom: 2px solid rgba(100, 100, 100, 0.6);

@@ -64,4 +64,6 @@ userSchema.virtual('numberOfTutorials').get(function () {
     return this.tutorials.length;
 });
 
+userSchema.set('toJSON', { virtuals: true });
+
 module.exports = mongoose.model('User', userSchema);

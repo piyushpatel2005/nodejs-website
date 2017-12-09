@@ -47,7 +47,8 @@ exports.signin = (req, res) => {
 exports.getTutorials = (req, res) => {
     Tutorial.find({})
     .populate('videos')
-    .populate('ratings')
+    .populate({path: 'owner', select: 'firstName'})
+    .populate({path: 'ratings', select: 'stars'})
     .then((tutorials) => {
         if(!req.session.userId) {
             return res.render('partials/tutorials/view-tutorials', {

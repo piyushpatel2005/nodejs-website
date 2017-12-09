@@ -87,4 +87,6 @@ tutorialSchema.virtual('totalTime').get(function () {
     return totalTime;
 });
 
+tutorialSchema.set('toJSON', {virtuals: true});
+
 module.exports = mongoose.model('Tutorial', tutorialSchema);

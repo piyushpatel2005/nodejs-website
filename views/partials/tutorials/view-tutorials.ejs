@@ -1,5 +1,36 @@
 <section class="container">
-    <div class="row">
-        List of tutorials
+    <div class="row row-content" ng-controller="TutorialsController">
+        <h3 class="text-center text-primary">List of Tutorials</h3>
+        <div class="col-md-12" ng-repeat="tutorial in tutorials">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>{{tutorial.title}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{tutorial.description}}
+                </div>
+                <div class="panel-footer small">
+                    <span class="ratings">
+                        <i class="fa fa-star"></i> {{tutorial.stars}} stars
+                    </span>
+                    <span class="divider">|</span>
+                    <span class="posted-by">
+                        <i class="fa fa-user"></i> Posted by: {{tutorial.owner.firstName}}
+                    </span>
+                    <span class="divider">|</span>
+                    <span class="created-at">
+                        Created at: {{tutorial.createdOn}}
+                    </span>
+                    <span class="divider">|</span>
+                    <span class="modified-at">
+                        Last Modified: {{tutorial.modifiedOn}}
+                    </span>
+                    <span class="divider">|</span>
+                    <span class="your-rating">
+                        Your rating: <i class="fa fa-star"></i> 4 stars
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

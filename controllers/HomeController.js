@@ -1,9 +1,10 @@
-const User = require('../models/user'); 
+const User = require('../models/user');
+const Tutorial = require('../models/tutorial');
 
 exports.index = (req, res) => {
     if(!req.session.userId) {
+        console.log('this route');
         return res.render('index', {
-            user: null,
             title: 'Home'
         });
     }
@@ -11,7 +12,7 @@ exports.index = (req, res) => {
     .then((user) => {
         if(!user) {
             req.session.userId = null;
-            res.redict('/signin');
+            res.redirect('/signin');
         }
         return res.render('index', {
             user: {
@@ -30,45 +31,48 @@ exports.index = (req, res) => {
 };
 
 exports.signup = (req, res) => {
-    res.render('signup', {
+    return res.render('signup', {
         user: null,
         title: 'Sign up'
     });
 };
 
 exports.signin = (req, res) => {
-    res.render('signin', {
+    return res.render('signin', {
         user: null,
         title: 'Login'
     })
 };
 
 exports.getTutorials = (req, res) => {
-    if(!req.session.userId) {
-        return res.render('partials/tutorials/view-tutorials', {
-            title: 'List of Tutorials',
-            user: null
-        });
-    }
-    if(req.session.userId) {
+    Tutorial.find({})
+    .populate('videos')
+    .populate('ratings')
+    .then((tutorials) => {
+        if(!req.session.userId) {
+            return res.render('partials/tutorials/view-tutorials', {
+                user: null,
+                tutorials: tutorials,
+                title: 'List of Tutorials'
+            });
+        }
         User.findById(req.session.userId)
         .then((user) => {
-            if(!user) {
-                req.session.userId = null;
-                res.redict('/signin');
-            }
             return res.render('partials/tutorials/view-tutorials', {
-                user: {
-                    id: user._id,
-                    email: user.email,
-                    gravatarUrl: user.gravatarUrl,
-                    admin: user.admin
-                },
-                title: "List of Tutorials"
+                user: user,
+                tutorials: tutorials,
+                title: 'List of Tutorials'
             });
         })
         .catch((err) => {
-            return res.redirect('/signin');
+            req.session.userId = null;
+            return res.status(500).json({
+                message: 'Session doesn\'t belong to you.'
+            });
         });
-    }
+    })
+    .catch((err) => {
+        console.log('Error retrieving all tutorials');
+        return res.redirect('/');
+    });
 };

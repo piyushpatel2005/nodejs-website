@@ -32,7 +32,6 @@ const tutorialSchema = new mongoose.Schema({
 });
 
 tutorialSchema.pre('findOne', function (next) {
-    console.log('in findon');
     this.populate('ratings');
     this.populate('videos');
     next();

@@ -36,4 +36,9 @@ router.post('/tutorials/add', isLoggedIn, TutorialController.createTutorial);
 
 router.get('/tutorials/:id', TutorialController.showTutorial);
 
+
+/** VideoController routes */
+
+router.post('/tutorials/:tutorialId/videos', VideoController.addVideo);
+
 module.exports = router;

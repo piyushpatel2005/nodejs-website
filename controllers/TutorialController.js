@@ -61,39 +61,54 @@ exports.createTutorial = function (req, res) {
 };
 
 exports.showTutorial = function (req, res) {
+    console.log("Inside showTuturial");
     Tutorial.findById(req.params.id)
     .populate('owner')
     .then((tutorial) => {
         
         if(!tutorial) {
+            console.log("If !tutorial");
             return res.status(404).json({
                 message: "This tutorial does not exist."
             });
         }
         if(!req.session.userId) {
+            console.log("If !req.session.userId");
             return res.render('partials/tutorials/tutorial-details', {
                 user: null,
                 title: tutorial.title,
-                tutorial: tutorial
+                tutorial: tutorial,
+                showAddVideo: false
             });
         }
         User.findById(req.session.userId)
         .then((user) => {
+            console.log("Inside findById");      
             if(!user) {
                 return res.render('partials/tutorials/tutorial-details', {
                     user: null,
                     title: tutorial.title,
-                    tutorial: tutorial
+                    tutorial: tutorial,
+                    showAddVideo: false 
+                });
+            }
+            if(tutorial.owner._id !== user._id) {
+                return res.render('partials/tutorials/tutorial-details', {
+                    user: user,
+                    title: tutorial.title,
+                    tutorial: tutorial,
+                    showAddVideo: false
                 });
             }
             return res.render('partials/tutorials/tutorial-details', {
                 user: {
                     id: user._id,
                     gravatarUrl: user.gravatarUrl,
-                    fullName: user.fullName,
+                    fullName: user.fullName
                 },
                 title: tutorial.title,
-                tutorial: tutorial
+                tutorial: tutorial,
+                showAddVideo: true
             });
         });
     })

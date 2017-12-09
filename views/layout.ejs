@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/font-awesome.min.css">
     <script>
-        window.user = <%- typeof user !== 'undefined'? JSON.stringify(user) : null %>
+        window.user = <%- typeof user === 'undefined' ? null : JSON.stringify(user) %>
+        window.tutorials = <%- typeof tutorials === 'undefined' ? 'null': JSON.stringify(tutorials) %>
+        window.tutorial = <%- typeof tutorial !== 'undefined' ? JSON.stringify(tutorial): 'null' %>
+        window.video = <%- typeof video !== 'undefined' ? JSON.stringify(video) : 'null' %>
     </script>
 </head>
 <body ng-app="tutorialsApp" ng-cloak>

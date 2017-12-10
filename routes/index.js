@@ -8,6 +8,8 @@ const RatingController = require('../controllers/RatingController');
 const VideoController = require('../controllers/VideoController');
 
 const isLoggedIn = require('../middlewares/isLoggedIn');
+const haveSessionId = require('../middlewares/haveSessionId');
+router.all('*', haveSessionId);
 
 /* GET home page actions. */
 router.get('/', HomeController.index);
@@ -37,6 +39,8 @@ router.post('/tutorials', isLoggedIn, TutorialController.createTutorial);
 router.get('/tutorials/:id', TutorialController.showTutorial);
 
 router.get('/tutorials/:id/edit-tutorial', TutorialController.showEditTutorialPage);
+
+router.put('/tutorials/:id', TutorialController.editTutorial);
 
 
 /** VideoController routes */

@@ -122,3 +122,109 @@ exports.showTutorial = function (req, res) {
         });
     });
 };
+
+exports.showEditTutorialPage = (req, res) => {
+    if(!req.session.userId) {
+        return res.status(403).json({
+            message: "You are not authorized to perform this action."
+        });
+    }
+
+    User.findById(req.session.userId)
+    .then((user) => {
+        if(!user) {
+            return res.status(403).json({
+                message: "You are not authorized to perform this action."
+            });
+        }
+        Tutorial.findById(req.params.id)
+        .then((tutorial) => {
+            if(!tutorial) {
+                return res.status(404).json({
+                    message: "This tutorial does not exist."
+                });
+            }
+            if(!tutorial.owner.equals(user._id)) {
+                return res.status(403).json({
+                    message: "You are not authorized to perform this action."
+                });
+            }
+            return res.render('partials/tutorials/edit-tutorial', {
+                tutorial: tutorial,
+                title: "Edit Tutorial",
+                user: user
+            });
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                message: "There was a problem serving your request."
+            });
+        })
+    })
+    .catch((err) => {
+        return res.status(500).json({
+            message: "Server Error occurred."
+        });
+    });
+};
+
+exports.editTutorial = (req, res) => {
+    if(!req.session.userId) {
+        return res.status(403).json({
+            message: "You are not authorized to perform this action."
+        });
+    }
+    User.findById(req.session.userId)
+    .then((user) => {
+        if(!user) {
+            return res.status(404).json({
+                message: "Session belongs to a user who does not exist."
+            });
+        }
+        Tutorial.findById(req.params.id)
+        .then((tutorial) => {
+            if(!tutorial) {
+                return res.status(404).json({
+                    message: "This tutorial does not exist."
+                });
+            }
+            if(!tutorial.owner.equals(user._id)) {
+                return res.status(403).json({
+                    message: "You are not authorized to perform this action."
+                });
+            }
+            let newTutorial = {
+                title: req.body.title,
+                description: req.body.description
+            }
+            let validationResult = TutorialServices.validateTutorial(newTutorial);
+            if(typeof validationResult === 'string') {
+                return res.status(500).json({
+                    message: validationResult
+                });
+            }        
+            Tutorial.findByIdAndUpdate(req.params.id, newTutorial, {new: true})
+            .then((updatedTutorial) => {
+                return res.status(201).json({
+                    message: "Tutorial updated successfully.",
+                    id: updatedTutorial._id
+                });
+            })
+            .catch((err) => {
+                return res.status(500).json({
+                    message: "Server Error occurred."
+                });
+            });
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                message: "Server Error occurred."
+            });
+        });
+    })
+    .catch((err) => {
+        return res.status(500).json({
+            message: "Server error occurred."
+        });
+    });
+};

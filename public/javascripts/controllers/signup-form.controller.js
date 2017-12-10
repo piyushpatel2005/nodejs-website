@@ -23,9 +23,9 @@
                 password: $scope.formData.password,
                 confirmation: $scope.formData.confirmation,
             })
-            .then((success) => {
+            .then((response) => {
                 // if successful then redirect
-                window.location = '/users/profile';
+                window.location = '/users/' + response.data.id;
             })
             .catch((err) => {
                 $scope.errors = err.data;

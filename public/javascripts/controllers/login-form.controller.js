@@ -12,8 +12,8 @@
 
         $scope.signin = function (data) {
             $http.put('/users/signin', data)
-            .then((success) => {
-                window.location = '/users/profile';
+            .then((response) => {
+                window.location = '/users/' + response.data.id ;
             })
             .catch((err) => {
                 $scope.errors = err.data;

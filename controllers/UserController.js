@@ -102,6 +102,7 @@ exports.createUser = (req, res, next) => {
                     return res.status(201).json({
                         errors: errors,
                         message: "User registration successful!",
+                        id: createdUser._id
                     });
                 });
             }
@@ -145,7 +146,8 @@ exports.login = (req, res, next) => {
             success: () => {
                 req.session.userId = foundUser._id;
                 return res.json({
-                    message: "Login Successful!"
+                    message: "Login Successful!",
+                    id: foundUser._id
                 });
             }
         });

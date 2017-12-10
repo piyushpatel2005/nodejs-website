@@ -44,23 +44,22 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         }
-    ],
+    ]
 }, {
     timestamps: true
+});
+
+userSchema.pre('find', function (next) {
+    this.populate('tutorials');
+    next();
 });
 
 userSchema.virtual('fullName').get(function() {
     return this.firstName + ' ' + this.lastName;
 });
 
-userSchema.virtual('toJSON').get(function () {
-    let obj = this.toObject();
-    delete obj.password;
-    delete obj.confirmation;
-    return obj;
-});
-
 userSchema.virtual('numberOfTutorials').get(function () {
+    // need pre find hook before we have this.tutorials
     return this.tutorials.length;
 });
 

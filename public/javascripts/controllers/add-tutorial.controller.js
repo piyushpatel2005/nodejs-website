@@ -11,7 +11,7 @@
             description: $scope.description
         };
         $scope.createTutorial = function (data) {
-            $http.post('/tutorials/add', data)
+            $http.post('/tutorials', data)
             .then((response) => {
                 toastr.success('Your tutorial has been created!', 'Success');
                 console.log(response);

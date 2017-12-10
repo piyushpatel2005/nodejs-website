@@ -66,3 +66,56 @@ exports.addVideo = function (req, res) {
         res.redirect('/signin');
     });
 };
+
+exports.deleteVideo = function (req, res) {
+    if(!req.session.userId) {
+        return res.status(403).json({
+            message: "You are not authorized to perform this action."
+        });
+    }
+    User.findById(req.sesion.userId)
+    .then((user) => {
+        if(!user) {
+            return res.redirect('/signin');
+        }
+        Tutorial.findById(tutorialId)
+        .then((tutorial) => {
+            if(!tutorial) {
+                return res.status(404).json({
+                    message: "This tutorial does not exist."
+                });
+            }
+            if(!tutorial.owner.equals(user._id)) {
+                return res.status(403).json({
+                    message: "You are not authorized to perform this action."
+                });
+            }
+            Video.findByIdAndRemove(req.params.id)
+            .then((video) => {
+                if(!video) {
+                    return res.json(404).json({
+                        message: "The resource you were looking for does not exist."
+                    });
+                }
+                return res.json({
+                    message: "Video deleted successfully!"
+                });
+            })
+            .catch((err) => {
+                return res.status(500).json({
+                    message: "Error retrieving video resource."
+                });
+            });
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                message: "Error retrieving tutorial resource."
+            });
+        });
+    })
+    .catch((err) => {
+        res.status(500).json({
+            message: "Something went wrong"
+        });
+    });
+}

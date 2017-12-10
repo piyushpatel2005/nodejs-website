@@ -4,7 +4,7 @@
         <div class="col-md-12" ng-repeat="tutorial in tutorials">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h4>{{tutorial.title}}</h4>
+                    <h4><a href="/tutorials/{{tutorial._id}}">{{tutorial.title}}</a></h4>
                 </div>
                 <div class="panel-body">
                     {{tutorial.description}}
@@ -15,7 +15,7 @@
                     </span>
                     <span class="divider">|</span>
                     <span class="posted-by">
-                        <i class="fa fa-user"></i> Posted by: {{tutorial.owner.firstName}}
+                        <i class="fa fa-user"></i> Posted by: <a href="#">{{tutorial.owner.firstName}}</a>
                     </span>
                     <span class="divider">|</span>
                     <span class="created-at">
@@ -27,7 +27,7 @@
                     </span>
                     <span class="divider">|</span>
                     <span class="your-rating">
-                        Your rating: <i class="fa fa-star"></i> 4 stars
+                        Your rating: <i class="fa fa-star"></i>  stars
                     </span>
                 </div>
             </div>

@@ -22,7 +22,7 @@ exports.showAddTutorialPage = function (req, res) {
     .catch((err) => {
         return res.redirect('/signin');
     });
-}
+};
 
 exports.createTutorial = function (req, res) {
     User.findById(req.session.userId)
@@ -62,6 +62,7 @@ exports.createTutorial = function (req, res) {
 
 exports.showTutorial = function (req, res) {
     console.log("Inside showTuturial");
+    console.log(req.params.id);
     Tutorial.findById(req.params.id)
     .populate('owner')
     .then((tutorial) => {
@@ -92,23 +93,25 @@ exports.showTutorial = function (req, res) {
                     showAddVideo: false 
                 });
             }
-            if(tutorial.owner._id !== user._id) {
+
+            if(tutorial.owner._id.equals(user._id)) {
                 return res.render('partials/tutorials/tutorial-details', {
-                    user: user,
+                    user: {
+                        id: user._id,
+                        gravatarUrl: user.gravatarUrl,
+                        fullName: user.fullName
+                    },
                     title: tutorial.title,
                     tutorial: tutorial,
-                    showAddVideo: false
+                    showAddVideo: true
                 });
+                
             }
             return res.render('partials/tutorials/tutorial-details', {
-                user: {
-                    id: user._id,
-                    gravatarUrl: user.gravatarUrl,
-                    fullName: user.fullName
-                },
+                user: user,
                 title: tutorial.title,
                 tutorial: tutorial,
-                showAddVideo: true
+                showAddVideo: false
             });
         });
     })

@@ -22,7 +22,7 @@ router.get('/tutorials', HomeController.getTutorials);
 /** UserController routes */
 router.post('/users/signup', UserController.createUser);
 
-router.get('/users/profile', UserController.viewProfile);
+router.get('/users/:id', UserController.viewProfile);
 
 router.put('/users/signin', UserController.login);
 
@@ -32,9 +32,11 @@ router.get('/users/logout', UserController.logout);
 
 router.get('/tutorials/add', isLoggedIn, TutorialController.showAddTutorialPage);
 
-router.post('/tutorials/add', isLoggedIn, TutorialController.createTutorial);
+router.post('/tutorials', isLoggedIn, TutorialController.createTutorial);
 
 router.get('/tutorials/:id', TutorialController.showTutorial);
+
+router.get('/tutorials/:id/edit-tutorial', TutorialController.showEditTutorialPage);
 
 
 /** VideoController routes */

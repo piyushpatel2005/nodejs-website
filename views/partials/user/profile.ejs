@@ -1,13 +1,44 @@
-<section class="container" ng-controller="UserController">
-    <div class="row">
+<section class="container" ng-controller="ProfileController">
+    <div class="row row-content">
         <div class="col-xs-12 col-sm-3">
-            <img ng-src="{{user.gravatarUrl}}" class="img-responsive img-thumbnail" alt="{{user.fullName}}">
+            
+            <div class="list-group">
+                <li class="list-group-item">
+                        <img ng-src="{{profileOwner.gravatarUrl}}" class="img-responsive img-thumbnail img-centered" alt="{{profileOwner.fullName}}">
+                </li>
+                <li class="list-group-item">
+                    <h3>{{profileOwner.fullName}}</h3>
+                </li>
+                <li class="list-group-item">
+                    Followers <span class="badge">{{profileOwner.subscribers.length || 0}}</span>
+                </li>
+                <li class="list-group-item">
+                    Following <span class="badge">{{profileOwner.followings.length || 0}}</span>
+                </li>
+            </div>
         </div>
         <div class="col-xs-12 col-sm-9">
-            <h2>{{user.fullName}}'s Personal Information</h2>
-            <p>Name: {{user.fullName}}</p>
-            <p>Email: {{user.email}}</p>
-            <p>Gravatar: {{user.gravatarUrl}}</p>
+            <h2>{{profileOwner.fullName}}'s Personal Information</h2>
+            <p>Name: {{profileOwner.fullName}}</p>
+            <p>Gravatar: {{profileOwner.gravatarUrl}}</p>
+            <% if (user.id === profileOwner.id) { %>
+                <button class="btn btn-info btn-block">
+                    Edit Profile
+                </button>
+            <% } %>
+            <hr>
+            <h4>My Published Tutorials</h4>
+            <div class="col-sm-4" ng-repeat="tutorial in profileOwner.tutorials">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>{{tutorial.title | limitTo : '25'}}</h4>
+                    </div>
+                    <div class="panel-body small">
+                        <p>{{tutorial.description | limitTo: '250'}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
+        
     </div>
 </section>

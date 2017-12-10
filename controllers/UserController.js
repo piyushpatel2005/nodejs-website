@@ -155,35 +155,47 @@ exports.login = (req, res, next) => {
 };
 
 exports.viewProfile = (req, res, next) => {
-    if(!req.session.userId) {
-        return res.redirect('/signin');
-    }
-
-    User.findById(req.session.userId, (err, loggedinUser) => {
-        if(err) {
-            return res.status(500).json({
-                message: "Something went wrong!"
+    User.findById(req.params.id)
+    .populate('tutorials')
+    .then((profileOwner) => {
+        if(!profileOwner) {
+            return res.status(404).json({
+                message: "The user does not exist."
             });
         }
-        if(!loggedinUser) {
-            return res.redirect('/signin');
+        if(!req.session.userId) {
+            return res.render('partials/user/profile', {
+                title: profileOwner.fullName,
+                profileOwner: profileOwner
+            });
         }
-        let user = {
-            id: loggedinUser._id,
-            email: loggedinUser.email
-        };
-
-        return res.render('partials/user/profile', {
-            user: {
-                id: loggedinUser._id,
-                fullName: loggedinUser.fullName,
-                email: loggedinUser.email,
-                gravatarUrl: loggedinUser.gravatarUrl
-            },
-            title: "My Profile"
+        User.findById(req.session.userId)
+        .then((user) => {
+            if(!user) {
+                return res.render('partials/user/profile', {
+                    title: profileOwner.fullName,
+                    profileOwner: profileOwner
+                });
+            }
+            return res.render('partials/user/profile', {
+                title: profileOwner.fullName,
+                profileOwner: profileOwner,
+                user: user
+            });
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                message: "Error processing user data."
+            });
+        });
+    })
+    .catch((err) => {
+        return res.status(500).json({
+            message: "Error finding this user data."
         });
     });
 };
+
 
 exports.logout = (req, res, next) => {
     if(!req.session.userId) {

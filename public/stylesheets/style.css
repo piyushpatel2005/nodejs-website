@@ -64,7 +64,9 @@ body {
   transform: translate(-50%, -50%);
 }
 /* Search bar in the home page */
-
+.pull-left, .pull-right {
+  margin: -4px 4px;
+}
 .panel {
   margin-top: 20px;
 }

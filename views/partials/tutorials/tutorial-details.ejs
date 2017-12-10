@@ -1,5 +1,5 @@
 <div class="container">
-    <% if (showAddVideo === true) { %> 
+    <% if (owner === true) { %> 
     <section class="row row-content">
         <div class="col-md-10 col-md-offset-1">
             <form class="form-horizontal" ng-controller="VideoController">
@@ -49,7 +49,17 @@
         <div class="col-md-12">
             <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h4><a href="/tutorials/{{tutorial._id}}">Tutorial Title</a></h4>
+                    <h4>
+                        <a href="/tutorials/{{tutorial._id}}">Tutorial Title</a>
+                        <% if (owner) { %>
+                        <a class="btn btn-danger pull-right" href="/tutorials/<%=tutorial.id %>">
+                            <i class="fa fa-remove"></i> Delete
+                        </a>
+                        <a class="btn btn-warning pull-right" href="/tutorials/<%= tutorial.id %>/edit-tutorial">
+                            <i class="fa fa-edit"></i> Edit
+                        </a>
+                        <% } %>
+                    </h4>
                 </div>
                 <div class="panel-body">
                     Tutorial description
@@ -78,13 +88,27 @@
             </div>
         </div>
         <div class="col-md-12">
-            <ol class="list-group" ng-repeat="video in tutorial.videos" ng-controller="VideoController">
+            <ol class="list-group" ng-repeat="vid in tutorial.videos" ng-controller="VideoController">
                 <li class="list-group-item">
                     <div class="list-group-item-heading">
-                        <a ng-href="/tutorials/{{tutorial._id}}/videos/{{video._id}}" class="list-group-item-heading">{{video.title}}</a>
+                        <a ng-href="/tutorials/{{tutorial._id}}/videos/{{vid.id}}" class="list-group-item-heading">
+                            {{$index+1}}. {{vid.title}}
+                            <% if (owner) { %>
+                                <a class="btn btn-danger pull-right btn-sm" ng-click="deleteVideo(vid.id)">
+                                    <i class="fa fa-remove"></i> Delete
+                                </a>
+                                <a class="btn btn-warning pull-right btn-sm" ng-href="/tutorials/<%= tutorial.id %>/videos/{{vid.id}}/edit-video">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                            <% } %>
+                        </a>
                     </div>
-                    <span class="small pull-right">| <i class="fa fa-calendar"></i> Uploaded: {{video.createdOn}}</span>
-                    <span class="small pull-right"><i class="fa fa-clock-o"></i> Duration: {{video.hour? video.hour + 'hour': ''}} {{video.minutes}} minutes</span>
+                    <span class="small pull-right">| <i class="fa fa-calendar"></i> Uploaded: {{vid.createdOn}}</span>
+                    <span class="small pull-right"><i class="fa fa-clock-o"></i>
+                        Duration: {{vid.hours? vid.hours + ' hour': ''}}
+                        {{vid.minutes? vid.minutes + ' minutes': ''}}
+                        {{vid.seconds? vid.seconds + ' seconds': ''}}
+                    </span>
                 </li>
             </ol>
         </div>

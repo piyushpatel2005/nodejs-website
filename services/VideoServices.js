@@ -30,7 +30,6 @@ exports.validateVideo = function (data) {
         hour = _.toInteger(hour);
         minutes = _.toInteger(minutes);
         seconds = _.toInteger(seconds);
-        console.log('converted to int');
         if(_.isInteger(hour) && _.isInteger(minutes) && _.isInteger(seconds)) {
             // maximum upto only 10 hours.
             if(_.inRange(hour, 10) && _.inRange(minutes, 60) && _.inRange(seconds, 60)) {

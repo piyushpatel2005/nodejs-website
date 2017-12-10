@@ -63,6 +63,19 @@ userSchema.virtual('numberOfTutorials').get(function () {
     return this.tutorials.length;
 });
 
+// TODO: update _id in server code to use id
+// userSchema.method('toJSON', function () {
+//     var user = this.toObject();
+//     delete user.password;
+//     delete user.email;
+//     user.id = user._id;
+//     delete user._id;
+//     delete user.__v;
+//     delete user.createdAt;
+//     delete user.updatedAt;
+//     return user;
+// })
+
 userSchema.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model('User', userSchema);

@@ -2,30 +2,39 @@ const User = require('../models/user');
 const Tutorial = require('../models/tutorial');
 
 exports.index = (req, res) => {
-    if(!req.session.userId) {
-        console.log('this route');
-        return res.render('index', {
-            title: 'Home'
-        });
-    }
-    User.findById(req.session.userId)
-    .then((user) => {
-        if(!user) {
-            req.session.userId = null;
-            res.redirect('/signin');
+    Tutorial.find({})
+    .sort({createdAt: -1})
+    .populate('ratings')
+    .populate('owner')
+    .then((tutorials) => {
+        if(!req.session.userId) {
+            console.log('this route');
+            return res.render('index', {
+                title: 'Home',
+                tutorials: tutorials
+            });
         }
-        return res.render('index', {
-            user: {
-                id: user._id,
-                fullName: user.fullName,
-                gravatarUrl: user.gravatarUrl
-            },
-            title: "Home"
+        User.findById(req.session.userId)
+        .then((user) => {
+            if(!user) {
+                req.session.userId = null;
+                res.redirect('/signin');
+            }
+            return res.render('index', {
+                user: user,
+                tutorials: tutorials,
+                title: "Home"
+            });
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                message: "Something went wrong."
+            });
         });
     })
     .catch((err) => {
         return res.status(500).json({
-            message: "Something went wrong."
+            message: "Error occurred processing tutorials data."
         });
     });
 };

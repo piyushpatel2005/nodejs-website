@@ -1,0 +1,46 @@
+<div class="container">
+    <section class="row row-content">
+        <div class="col-md-10 col-md-offset-1">
+            <form class="form-horizontal" ng-controller="VideoController">
+                <h3 class="text-center">Update a Video</h3>
+                <div class="form-group">
+                    <label for="title" class="col-md-2 control-label">
+                        Video Title:
+                    </label>
+                    <div class="col-md-10">
+                            <input type="text" id="title" name="title" class="form-control" placeholder="Title of Video" ng-model="video.title">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="url" class="col-md-2 control-label">
+                        YouTube URL:
+                    </label>
+                    <div class="col-md-10">
+                        <input type="url" class="form-control" name="url" id="url" placeholder="YouTube URL?" ng-model="video.url">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="hour" class="col-md-2 control-label">Hour:</label>
+                    <div class="col-md-2">
+                        <input class="form-control" type="number" min="0" max="10" name="hour" id="hour" placeholder="Hour" ng-model="video.hour">
+                    </div>
+                    <label for="minute" class="col-md-2 control-label">Minutes:</label>
+                    <div class="col-md-2">
+                        <input class="form-control" type="number" min="0" max="59" name="minute" id="minute" placeholder="Minutes" ng-model="video.minutes">
+                    </div>
+                    <label for="second" class="col-md-2 control-label">Seconds:</label>
+                    <div class="col-md-2">
+                        <input class="form-control" type="number" min="0" max="59" name="second" id="second" placeholder="Seconds" ng-model="video.seconds">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button class="btn btn-info" ng-click="updateVideo()">
+                            Update Video
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>

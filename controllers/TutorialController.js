@@ -79,7 +79,7 @@ exports.showTutorial = function (req, res) {
                 user: null,
                 title: tutorial.title,
                 tutorial: tutorial,
-                showAddVideo: false
+                owner: false
             });
         }
         User.findById(req.session.userId)
@@ -90,7 +90,7 @@ exports.showTutorial = function (req, res) {
                     user: null,
                     title: tutorial.title,
                     tutorial: tutorial,
-                    showAddVideo: false 
+                    owner: false 
                 });
             }
 
@@ -103,7 +103,7 @@ exports.showTutorial = function (req, res) {
                     },
                     title: tutorial.title,
                     tutorial: tutorial,
-                    showAddVideo: true
+                    owner: true
                 });
                 
             }

@@ -51,6 +51,10 @@ router.get('/tutorials/:tutorialId/videos/:id', VideoController.viewVideo);
 
 router.delete('/tutorials/:tutorialId/videos/:id', VideoController.deleteVideo);
 
+router.put('/tutorials/:tutorialId/videos/:id', VideoController.editVideo);
+
+router.get('/tutorials/:tutorialId/videos/:id/edit-video', VideoController.showEditVideoPage);
+
 /** RatingController routes */
 
 router.post('/tutorials/:tutorialId/ratings', RatingController.rateTutorial);

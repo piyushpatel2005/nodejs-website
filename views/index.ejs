@@ -9,30 +9,31 @@
     </div>
 </div>
 <div class="container">
-    <div class="row">
+    <div class="row" ng-controller="TutorialsController">
         <div class="col-md-12">
-            <div class="panel panel-info">
+            <div class="panel panel-info" ng-repeat="tutorial in tutorials">
                 <div class="panel-heading">
-                    <h4>Tutorial Title</h4>
+                    <h4><a ng-href="/tutorials/{{tutorial.id}}">{{tutorial.title}}</a></h4>
                 </div>
                 <div class="panel-body">
-                    tutorial description
+                    {{tutorial.description}}
                 </div>
                 <div class="panel-footer small">
                     <span class="ratings">
-                        <i class="fa fa-star"></i>  3.5 stars
+                        <i class="fa fa-star"></i>  {{tutorial.stars}} stars
                     </span>
                     <span class="divider">|</span>
                     <span class="posted-by">
-                        <i class="fa fa-user"></i> Posted by: abc123
+                        <i class="fa fa-user"></i>
+                        Posted by: <a ng-href="/users/{{tutorial.owner.id}}">{{tutorial.owner.fullName}}</a>
                     </span>
                     <span class="divider">|</span>
                     <span class="created-at">
-                        Created at: a second ago
+                        Created at: {{tutorial.createdOn}}
                     </span>
                     <span class="divider">|</span>
                     <span class="modified-at">
-                        Last Modified: a month ago
+                        Last Modified: {{tutorial.modifiedOn}}
                     </span>
                     <span class="divider">|</span>
                     <span class="your-rating">

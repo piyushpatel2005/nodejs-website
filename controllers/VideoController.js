@@ -17,7 +17,6 @@ exports.addVideo = function (req, res) {
         Tutorial.findById(req.params.tutorialId)
         .then((tutorial) => {
             if(!tutorial) {
-                console.log('tutorial not found', req.params.tutorialId);
                 return res.status(404).json({
                     message: "This tutorial does not exist."
                 });
@@ -40,20 +39,21 @@ exports.addVideo = function (req, res) {
                     message: validationResult
                 });
             }
-            console.log('validation success');
             let newVideo = new Video(validationResult);
+            console.log('validation success');
             newVideo.tutorialId = tutorial._id;
-            console.log(newVideo);
             newVideo.save()
             .then((video) => {
                 tutorial.videos.push(video._id);
+                console.log(tutorial);
                 tutorial.videoOrder.push(video._id);
                 tutorial.save()
                 .then((updatedTutorial) => {
+                    console.log('vidoe saved');
                     return res.json({
                         // send video so that front end framework can handle addition to the UI
                         message: "Video record added successfully.",
-                        tutorial: updatedTutorial
+                        video: video
                     });
                 })
                 .catch((err) => {
@@ -64,19 +64,21 @@ exports.addVideo = function (req, res) {
                 
             })
             .catch((err) => {
-                res.status(500).json({
+                return res.status(500).json({
                     message: "Failed to add this video."
                 });
             });
         })
         .catch((err) => {
-            res.status(404).json({
+            return res.status(404).json({
                 message: "Error finding tutorial by id"
             });
         });
     })
     .catch((err) => {
-        res.redirect('/signin');
+        return res.status(500).json({
+            message: "Error getting user data."
+        });
     });
 };
 
@@ -86,18 +88,22 @@ exports.deleteVideo = function (req, res) {
             message: "You are not authorized to perform this action."
         });
     }
-    User.findById(req.sesion.userId)
+    
+    User.findById(req.session.userId)
     .then((user) => {
         if(!user) {
             return res.redirect('/signin');
         }
-        Tutorial.findById(tutorialId)
+        
+        Tutorial.findById(req.params.tutorialId)
         .then((tutorial) => {
             if(!tutorial) {
                 return res.status(404).json({
                     message: "This tutorial does not exist."
                 });
             }
+            console.log('in delete vide');
+            
             if(!tutorial.owner.equals(user._id)) {
                 return res.status(403).json({
                     message: "You are not authorized to perform this action."
@@ -111,7 +117,8 @@ exports.deleteVideo = function (req, res) {
                     });
                 }
                 return res.json({
-                    message: "Video deleted successfully!"
+                    message: "Video deleted successfully!",
+                    video: video
                 });
             })
             .catch((err) => {
@@ -127,24 +134,21 @@ exports.deleteVideo = function (req, res) {
         });
     })
     .catch((err) => {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Something went wrong"
         });
     });
 };
 
 exports.viewVideo = (req, res) => {
-    console.log('inside viewVide');
     Video.findById(req.params.id) 
     .then((video) => {
         if(!video) {
-            console.log('video not ofund');
             return res.status(404).json({
                 message: "The resource you were looking for does not exist."
             });
         }
         if(!req.session.userId) {
-            console.log('session doesnt');
             return res.render('partials/tutorials/view-video', {
                 video: video,
                 title: video.title
@@ -154,16 +158,11 @@ exports.viewVideo = (req, res) => {
         .then((user) => {
             
             if(!user) {
-                console.log('user not found');
                 return res.render('partials/tutorials/view-video', {
                     video: video,
                     title: video.title
                 });
             }
-            console.log('user found');
-            // return res.json({
-            //     message: "Done"
-            // });
             return res.render('partials/tutorials/view-video', {
                 video: video,
                 title: video.title,
@@ -179,6 +178,133 @@ exports.viewVideo = (req, res) => {
     .catch((err) => {
         return res.status(500).json({
             message: "Error getting video data"
+        });
+    });
+};
+
+exports.showEditVideoPage = (req, res) => {
+    if(!req.session.userId) {
+        return res.status(403).json({
+            message: "You are not authorized to perform this action."
+        });
+    }
+    Tutorial.findById(req.params.tutorialId)
+    .then((tutorial) => {
+        if(!tutorial) {
+            return res.status(404).json({
+                message: "This tutorial does not exist."
+            });
+        }
+        User.findById(req.session.userId)
+        .then((user) => {
+            if(!user) {
+                return res.status(404).json({
+                    message: "The user does not exist."
+                });
+            }
+            if(!tutorial.owner.equals(user.id)) {
+                return res.status(403).json({
+                    message: "You are not authorized to perform this action."
+                });
+            }
+           
+            Video.findById(req.params.id)
+            .then((video) => {
+                if(!video) {
+                    return res.status(404).json({
+                        message: "This video does not exist."
+                    });
+                }
+                return res.render('partials/tutorials/edit-video', {
+                    user: user,
+                    video: video,
+                    title: 'Edit Video',
+                    tutorial: tutorial
+                });
+            })
+            .catch((err) => {
+                return res.status(500).json({
+                    message: "Error getting user video data."
+                });
+            });
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                message: "Error getting user data."
+            });
+        });
+    })
+    .catch((err) => {
+        return res.status(500).json({
+            message: "Error occurred processing this tutorial."
+        });
+    });
+};
+
+exports.editVideo = (req, res) => {
+    if(!req.session.userId) {
+        return res.status(403).json({
+            message: "You are not authorized to perform this action."
+        });
+    }
+    Tutorial.findById(req.params.tutorialId)
+    .then((tutorial) => {
+        if(!tutorial) {
+            return res.status(404).json({
+                message: "This tutorial does not exist."
+            });
+        }
+        User.findById(req.session.userId)
+        .then((user) => {
+            if(!user) {
+                return res.status(404).json({
+                    message: "The user does not exist."
+                });
+            }
+            if(!tutorial.owner.equals(user.id)) {
+                return res.status(403).json({
+                    message: "You are not authorized to perform this action."
+                });
+            }
+            let videoRecord = {
+                title: req.body.title,
+                url: req.body.url,
+                hour: req.body.hour,
+                minutes: req.body.minutes,
+                seconds: req.body.seconds
+            };
+            let validationResult = VideoServices.validateVideo(videoRecord);
+            if(typeof validationResult === 'string') {
+                return res.status(500).json({
+                    message: validationResult
+                });
+            }
+            Video.findByIdAndUpdate(req.params.id, validationResult, {new: true})
+            .then((video) => {
+                if(!video) {
+                    return res.status(404).json({
+                        message: "This video does not exist."
+                    });
+                }
+                return res.json({
+                    message: "Video record updated successfully!"
+                });
+            })
+            .catch((err) => {
+                return res.status(500).json({
+                    message: "Error getting user video data."
+                });
+            });
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                message: "Error getting user data."
+            });
+        });
+    })
+    .catch((err) => {
+        return res.status(500).json({
+            message: "Error occurred processing this tutorial."
         });
     });
 };

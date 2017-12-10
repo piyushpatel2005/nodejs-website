@@ -51,6 +51,13 @@ videoSchema.virtual('createdOn').get(function () {
     return timeAgoString;
 });
 
+videoSchema.virtual('youtubeId').get(function () {
+    let endOfId = this.url.length;
+    let youtubeId = this.url.substring(this.url.indexOf('=') + 1, endOfId);
+    console.log(youtubeId);
+    return youtubeId;
+});
+
 videoSchema.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model('Video', videoSchema);

@@ -47,6 +47,12 @@ router.put('/tutorials/:id', TutorialController.editTutorial);
 
 router.post('/tutorials/:tutorialId/videos', VideoController.addVideo);
 
+router.get('/tutorials/:tutorialId/videos/:id', VideoController.viewVideo);
+
 router.delete('/tutorials/:tutorialId/videos/:id', VideoController.deleteVideo);
+
+/** RatingController routes */
+
+router.post('/tutorials/:tutorialId/ratings', RatingController.rateTutorial);
 
 module.exports = router;

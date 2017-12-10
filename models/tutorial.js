@@ -17,6 +17,12 @@ const tutorialSchema = new mongoose.Schema({
             ref: 'Video'
         }
     ],
+    videoOrder: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Video'
+        }
+    ],
     ratings: [
         {
             type: mongoose.Schema.Types.ObjectId,

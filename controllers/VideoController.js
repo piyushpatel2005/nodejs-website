@@ -1,5 +1,7 @@
 const Video = require('../models/video');
 const Tutorial = require('../models/tutorial');
+const User = require('../models/user');
+const VideoServices = require('../services/VideoServices');
 
 exports.addVideo = function (req, res) {
     if(!req.session.userId) {
@@ -15,11 +17,12 @@ exports.addVideo = function (req, res) {
         Tutorial.findById(req.params.tutorialId)
         .then((tutorial) => {
             if(!tutorial) {
+                console.log('tutorial not found', req.params.tutorialId);
                 return res.status(404).json({
                     message: "This tutorial does not exist."
                 });
             }
-            if(tutorial.owner !== user._id) {
+            if(!tutorial.owner.equals(user._id)) {
                 return res.status(403).json({
                     message: "You are not authorized to perform this action."
                 });
@@ -30,25 +33,35 @@ exports.addVideo = function (req, res) {
                 hour: req.body.hour,
                 minutes: req.body.minutes,
                 seconds: req.body.seconds
-            }
+            };
             let validationResult = VideoServices.validateVideo(videoRecord);
             if(typeof validationResult === 'string') {
                 return res.status(500).json({
                     message: validationResult
                 });
             }
+            console.log('validation success');
             let newVideo = new Video(validationResult);
             newVideo.tutorialId = tutorial._id;
+            console.log(newVideo);
             newVideo.save()
             .then((video) => {
                 tutorial.videos.push(video._id);
                 tutorial.videoOrder.push(video._id);
-                // TODO: send data back with video added
-                return res.json({
-                    // send video so that front end framework can handle addition to the UI
-                    message: "Video record added successfully.",
-                    video: video
+                tutorial.save()
+                .then((updatedTutorial) => {
+                    return res.json({
+                        // send video so that front end framework can handle addition to the UI
+                        message: "Video record added successfully.",
+                        tutorial: updatedTutorial
+                    });
+                })
+                .catch((err) => {
+                    return res.status(500).json({
+                        message: "Error saving updated tutorial"
+                    });
                 });
+                
             })
             .catch((err) => {
                 res.status(500).json({
@@ -58,7 +71,7 @@ exports.addVideo = function (req, res) {
         })
         .catch((err) => {
             res.status(404).json({
-                message: "This tutorial does not exist."
+                message: "Error finding tutorial by id"
             });
         });
     })
@@ -118,4 +131,54 @@ exports.deleteVideo = function (req, res) {
             message: "Something went wrong"
         });
     });
-}
+};
+
+exports.viewVideo = (req, res) => {
+    console.log('inside viewVide');
+    Video.findById(req.params.id) 
+    .then((video) => {
+        if(!video) {
+            console.log('video not ofund');
+            return res.status(404).json({
+                message: "The resource you were looking for does not exist."
+            });
+        }
+        if(!req.session.userId) {
+            console.log('session doesnt');
+            return res.render('partials/tutorials/view-video', {
+                video: video,
+                title: video.title
+            });
+        }
+        User.findById(req.session.userId)
+        .then((user) => {
+            
+            if(!user) {
+                console.log('user not found');
+                return res.render('partials/tutorials/view-video', {
+                    video: video,
+                    title: video.title
+                });
+            }
+            console.log('user found');
+            // return res.json({
+            //     message: "Done"
+            // });
+            return res.render('partials/tutorials/view-video', {
+                video: video,
+                title: video.title,
+                user: user
+            });
+        })
+        .catch((err) => {
+            return res.status(500).json({
+                message: "Error finding user data"
+            });
+        });
+    })
+    .catch((err) => {
+        return res.status(500).json({
+            message: "Error getting video data"
+        });
+    });
+};

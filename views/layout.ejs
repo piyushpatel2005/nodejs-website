@@ -14,7 +14,10 @@
         window.tutorials = <%- typeof tutorials === 'undefined' ? 'null': JSON.stringify(tutorials) %>
         window.tutorial = <%- typeof tutorial !== 'undefined' ? JSON.stringify(tutorial): 'null' %>
         window.video = <%- typeof video !== 'undefined' ? JSON.stringify(video) : 'null' %>
-        console.log(tutorials);
+        console.log('user: ', user);
+        console.log('tutorials: ', tutorials);
+        console.log('tutorial: ', tutorial);
+        console.log('video: ', video);
     </script>
 </head>
 <body ng-app="tutorialsApp" ng-cloak>
@@ -28,10 +31,8 @@
     <script src="/javascripts/controllers/navigation.controller.js"></script>
     <script src="/javascripts/controllers/signup-form.controller.js"></script>
     <script src="/javascripts/controllers/login-form.controller.js"></script>
-    <script src="/javascripts/controllers/profile.controller.js"></script>
-    <script src="/javascripts/controllers/add-tutorial.controller.js"></script>
+    <script src="/javascripts/controllers/user.controller.js"></script>
     <script src="/javascripts/controllers/tutorials.controller.js"></script>
-    <script src="/javascripts/controllers/edit-tutorial.controller.js"></script>
-    
+    <script src="/javascripts/controllers/video.controller.js"></script>
 </body>
 </html>

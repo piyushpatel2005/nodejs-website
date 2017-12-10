@@ -1,6 +1,6 @@
 (function () {
     angular.module('tutorialsApp')
-    .controller('ProfileController', ProfileController);
+    .controller('UserController', ProfileController);
 
     ProfileController.$inject = ['$scope', '$window'];
     function ProfileController($scope, $window) {

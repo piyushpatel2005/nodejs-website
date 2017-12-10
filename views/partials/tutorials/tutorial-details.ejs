@@ -1,43 +1,42 @@
 <div class="container">
-    <%= showAddVideo %>
     <% if (showAddVideo === true) { %> 
     <section class="row row-content">
         <div class="col-md-10 col-md-offset-1">
-            <form class="form-horizontal">
+            <form class="form-horizontal" ng-controller="VideoController">
                 <h3 class="text-center">Add a Video</h3>
                 <div class="form-group">
-                    <label for="title" class="col-sm-2 control-label">
+                    <label for="title" class="col-md-2 control-label">
                         Video Title:
                     </label>
-                    <div class="col-sm-10">
-                         <input type="text" id="title" name="title" class="form-control" placeholder="Title of Video">
+                    <div class="col-md-10">
+                         <input type="text" id="title" name="title" class="form-control" placeholder="Title of Video" ng-model="formData.title">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="url" class="col-sm-2 control-label">
+                    <label for="url" class="col-md-2 control-label">
                         YouTube URL:
                     </label>
-                    <div class="col-sm-10">
-                        <input type="url" class="form-control" name="url" id="url" placeholder="YouTube URL?">
+                    <div class="col-md-10">
+                        <input type="url" class="form-control" name="url" id="url" placeholder="YouTube URL?" ng-model="formData.url">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="hour" class="col-md-2 control-label">Hour:</label>
                     <div class="col-md-2">
-                        <input class="form-control" type="number" min="0" max="10" name="hour" id="hour" placeholder="Hour">
+                        <input class="form-control" type="number" min="0" max="10" name="hour" id="hour" placeholder="Hour" ng-model="formData.hour">
                     </div>
                     <label for="minute" class="col-md-2 control-label">Minutes:</label>
                     <div class="col-md-2">
-                        <input class="form-control" type="number" min="0" max="59" name="minute" id="minute" placeholder="Minutes">
+                        <input class="form-control" type="number" min="0" max="59" name="minute" id="minute" placeholder="Minutes" ng-model="formData.minutes">
                     </div>
                     <label for="second" class="col-md-2 control-label">Seconds:</label>
                     <div class="col-md-2">
-                        <input class="form-control" type="number" min="0" max="59" name="second" id="second" placeholder="Seconds">
+                        <input class="form-control" type="number" min="0" max="59" name="second" id="second" placeholder="Seconds" ng-model="formData.seconds">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button class="btn btn-info">
+                        <button class="btn btn-info" ng-click="addVideo(formData)">
                             Add Video
                         </button>
                     </div>
@@ -46,23 +45,46 @@
         </div>
     </section>
     <% } %>
-    <section class="row row-content">
+    <section class="row row-content" ng-controller="TutorialsController">
         <div class="col-md-12">
-            <h3>List of Videos<small class="pull-right">4 stars</small></h3>
-
-            <ol class="list-group">
-                <li class="list-group-item">
-                    <a href="#" class="list-group-item-heading">Video Title 1 This is tha largest </a>
-
-                    <span class="small pull-right">| <i class="fa fa-calendar"></i> Uploaded a month ago</span>
-                    <span class="small pull-right"><i class="fa fa-clock-o"></i> Duration: 1 hour 20 minutes</span>
-                </li>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4><a href="/tutorials/{{tutorial._id}}">Tutorial Title</a></h4>
+                </div>
+                <div class="panel-body">
+                    Tutorial description
+                </div>
+                <div class="panel-footer small">
+                    <span class="ratings">
+                        <i class="fa fa-star"></i> {{tutorial.stars}} stars
+                    </span>
+                    <span class="divider">|</span>
+                    <span class="posted-by">
+                        <i class="fa fa-user"></i> Posted by: <a href="/users/{{tutorial.owner._id}}">{{tutorial.owner.firstName}}</a>
+                    </span>
+                    <span class="divider">|</span>
+                    <span class="created-at">
+                        Created at: {{tutorial.createdOn}}
+                    </span>
+                    <span class="divider">|</span>
+                    <span class="modified-at">
+                        Last Modified: {{tutorial.modifiedOn}}
+                    </span>
+                    <span class="divider">|</span>
+                    <span class="your-rating">
+                        Your rating: <i class="fa fa-star"></i>  stars
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <ol class="list-group" ng-repeat="video in tutorial.videos" ng-controller="VideoController">
                 <li class="list-group-item">
                     <div class="list-group-item-heading">
-                        <a href="#">Video Title 1 This is tha largest video </a>
+                        <a ng-href="/tutorials/{{tutorial._id}}/videos/{{video._id}}" class="list-group-item-heading">{{video.title}}</a>
                     </div>
-                    <span class="small pull-right">| <i class="fa fa-calendar"></i> Uploaded a month ago</span>
-                    <span class="small pull-right"><i class="fa fa-clock-o"></i> Duration: 1 hour 20 minutes</span>
+                    <span class="small pull-right">| <i class="fa fa-calendar"></i> Uploaded: {{video.createdOn}}</span>
+                    <span class="small pull-right"><i class="fa fa-clock-o"></i> Duration: {{video.hour? video.hour + 'hour': ''}} {{video.minutes}} minutes</span>
                 </li>
             </ol>
         </div>

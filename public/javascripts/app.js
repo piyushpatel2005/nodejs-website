@@ -1,2 +1,4 @@
-let tutorialApp = angular.module('tutorialsApp', []);
+(function () {
+    let tutorialApp = angular.module('tutorialsApp', []);
+})();
 

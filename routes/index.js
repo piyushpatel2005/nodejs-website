@@ -47,4 +47,6 @@ router.put('/tutorials/:id', TutorialController.editTutorial);
 
 router.post('/tutorials/:tutorialId/videos', VideoController.addVideo);
 
+router.delete('/tutorials/:tutorialId/videos/:id', VideoController.deleteVideo);
+
 module.exports = router;

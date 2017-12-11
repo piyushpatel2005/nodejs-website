@@ -13,6 +13,10 @@
             description: $scope.description
         };
 
+        $scope.$on('videoDeleted', (event, tutorial) => {
+            $scope.tutorial = tutorial;
+        });
+
         $scope.createTutorial = function (data) {
             $http.post('/tutorials', data)
             .then((response) => {

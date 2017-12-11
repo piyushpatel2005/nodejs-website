@@ -40,16 +40,13 @@ exports.addVideo = function (req, res) {
                 });
             }
             let newVideo = new Video(validationResult);
-            console.log('validation success');
             newVideo.tutorialId = tutorial._id;
             newVideo.save()
             .then((video) => {
                 tutorial.videos.push(video._id);
-                console.log(tutorial);
                 tutorial.videoOrder.push(video._id);
                 tutorial.save()
                 .then((updatedTutorial) => {
-                    console.log('vidoe saved');
                     return res.json({
                         // send video so that front end framework can handle addition to the UI
                         message: "Video record added successfully.",
@@ -82,6 +79,66 @@ exports.addVideo = function (req, res) {
     });
 };
 
+// exports.deleteVideo = function (req, res) {
+//     if(!req.session.userId) {
+//         return res.status(403).json({
+//             message: "You are not authorized to perform this action."
+//         });
+//     }
+    
+//     User.findById(req.session.userId)
+//     .then((user) => {
+//         if(!user) {
+//             return res.status(403).json({
+//                 message: "You are not authorized to perform this action."
+//             });
+//         }  
+//         Tutorial.findById(req.params.tutorialId)
+//         // .populate('videos')
+//         .then((tutorial) => {
+//             if(!tutorial) {
+//                 return res.status(404).json({
+//                     message: "This tutorial does not exist."
+//                 });
+//             }  
+//             if(!tutorial.owner.equals(user._id)) {
+//                 return res.status(403).json({
+//                     message: "You are not authorized to perform this action."
+//                 });
+//             }
+            
+//             Video.findByIdAndUpdate(req.params.id, {$pull: {videos: req.params.id}}, {new: true})
+//             .then((video) => {
+                
+//                 if(!video) {
+//                     return res.json(404).json({
+//                         message: "The resource you were looking for does not exist."
+//                     });
+//                 }
+//                 return res.json({
+//                     message: "Video deleted successfully!",
+//                     tutorial: tutorial
+//                 });
+//             })
+//             .catch((err) => {
+//                 return res.status(500).json({
+//                     message: "Error retrieving video resource."
+//                 });
+//             });
+//         })
+//         .catch((err) => {
+//             return res.status(500).json({
+//                 message: "Error retrieving tutorial resource."
+//             });
+//         });
+//     })
+//     .catch((err) => {
+//         return res.status(500).json({
+//             message: "Something went wrong"
+//         });
+//     });
+// };
+
 exports.deleteVideo = function (req, res) {
     if(!req.session.userId) {
         return res.status(403).json({
@@ -92,38 +149,38 @@ exports.deleteVideo = function (req, res) {
     User.findById(req.session.userId)
     .then((user) => {
         if(!user) {
-            return res.redirect('/signin');
+            return res.status(403).json({
+                message: "You are not authorized to perform this action."
+            });
         }
-        
-        Tutorial.findById(req.params.tutorialId)
+        if(user.tutorials.indexOf(req.params.tutorialId) < -1) {
+            return res.status(403).json({
+                message: "You are not authorized to perform this action."
+            });
+        }
+        Tutorial.findByIdAndUpdate(req.params.tutorialId, {$pull: {videos: req.params.id, videoOrder: req.params.id}}, {new: true})
+        .populate('videos')
         .then((tutorial) => {
             if(!tutorial) {
                 return res.status(404).json({
                     message: "This tutorial does not exist."
                 });
             }
-            console.log('in delete vide');
-            
-            if(!tutorial.owner.equals(user._id)) {
-                return res.status(403).json({
-                    message: "You are not authorized to perform this action."
-                });
-            }
             Video.findByIdAndRemove(req.params.id)
             .then((video) => {
                 if(!video) {
-                    return res.json(404).json({
-                        message: "The resource you were looking for does not exist."
+                    return res.status(404).json({
+                        message: "The video you are looking for does not exist."
                     });
                 }
                 return res.json({
                     message: "Video deleted successfully!",
-                    video: video
+                    tutorial: tutorial
                 });
             })
             .catch((err) => {
                 return res.status(500).json({
-                    message: "Error retrieving video resource."
+                    message: "Something went wrong."
                 });
             });
         })

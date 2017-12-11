@@ -23,6 +23,10 @@ const videoSchema = new mongoose.Schema({
     timestamps: true
 });
 
+videoSchema.pre('remove', function (next) {
+    Tutorial.update({_id: this.tutorialId}, { $pull: {videos: this._id, videoOrder: this._id }});
+});
+
 videoSchema.virtual('seconds').get(function () {
     return this.duration % 60;
 });
@@ -31,7 +35,7 @@ videoSchema.virtual('minutes').get(function () {
     return Math.floor((this.duration / 60) % 60);
 });
 
-videoSchema.virtual('hours').get(function () {
+videoSchema.virtual('hour').get(function () {
     return Math.floor(this.duration / 60 / 60);
 });
 

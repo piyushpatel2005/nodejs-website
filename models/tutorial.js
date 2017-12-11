@@ -38,6 +38,7 @@ const tutorialSchema = new mongoose.Schema({
 });
 
 tutorialSchema.pre('findOne', function (next) {
+    console.log('findone aclled');
     this.populate('ratings');
     this.populate('videos');
     next();
@@ -91,6 +92,10 @@ tutorialSchema.virtual('totalTime').get(function () {
         return sum + time;
     });
     return totalTime;
+});
+
+tutorialSchema.pre('remove', function (next) {
+    Video.remove({tutorialId: this._id}).exec();
 });
 
 tutorialSchema.set('toJSON', {virtuals: true});

@@ -166,7 +166,8 @@ exports.viewProfile = (req, res, next) => {
         if(!req.session.userId) {
             return res.render('partials/user/profile', {
                 title: profileOwner.fullName,
-                profileOwner: profileOwner
+                profileOwner: profileOwner,
+                user: null
             });
         }
         User.findById(req.session.userId)
@@ -174,7 +175,8 @@ exports.viewProfile = (req, res, next) => {
             if(!user) {
                 return res.render('partials/user/profile', {
                     title: profileOwner.fullName,
-                    profileOwner: profileOwner
+                    profileOwner: profileOwner,
+                    user: null
                 });
             }
             return res.render('partials/user/profile', {
@@ -198,9 +200,12 @@ exports.viewProfile = (req, res, next) => {
 
 
 exports.logout = (req, res, next) => {
+    console.log('inside userlogout');
+
     if(!req.session.userId) {
         return res.redirect('/signin');
     }
+    console.log('req.session.userId', req.session.userId);
 
     User.findById(req.session.userId, (err, user) => {
         if(err) {
@@ -215,5 +220,5 @@ exports.logout = (req, res, next) => {
 
         req.session.userId = null;
         return res.redirect('/signin');
-    })
+    });
 };

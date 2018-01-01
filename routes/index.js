@@ -8,15 +8,16 @@ const RatingController = require('../controllers/RatingController');
 const VideoController = require('../controllers/VideoController');
 
 const isLoggedIn = require('../middlewares/isLoggedIn');
+const isLoggedOut = require('../middlewares/isLoggedOut');
 const haveSessionId = require('../middlewares/haveSessionId');
-router.all('*', haveSessionId);
+// router.all('*', haveSessionId);
 
 /* GET home page actions. */
 router.get('/', HomeController.index);
 
-router.get('/signup', HomeController.signup);
+router.get('/signup', isLoggedOut, HomeController.signup);
 
-router.get('/signin', HomeController.signin);
+router.get('/signin', isLoggedOut, HomeController.signin);
 
 router.get('/tutorials', HomeController.getTutorials);
 
@@ -24,11 +25,12 @@ router.get('/tutorials', HomeController.getTutorials);
 /** UserController routes */
 router.post('/users/signup', UserController.createUser);
 
+router.get('/users/logout', isLoggedIn, UserController.logout);
+
 router.get('/users/:id', UserController.viewProfile);
 
 router.put('/users/signin', UserController.login);
 
-router.get('/users/logout', UserController.logout);
 
 /** TutorialController routes */
 

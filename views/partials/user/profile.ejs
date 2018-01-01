@@ -21,7 +21,7 @@
             <h2>{{profileOwner.fullName}}'s Personal Information</h2>
             <p>Name: {{profileOwner.fullName}}</p>
             <p>Gravatar: {{profileOwner.gravatarUrl}}</p>
-            <% if (user.id === profileOwner.id) { %>
+            <% if (user && profileOwner && user.id === profileOwner.id) { %>
                 <button class="btn btn-info btn-block">
                     Edit Profile
                 </button>
